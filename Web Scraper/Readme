@@ -1,0 +1,1 @@
+An automated Web Scraper using google search and beautifulsoup. It retrieves the first link from the google search, scrapes it, and then uses beautifulsoup to download data and then return it in a tabular form.
