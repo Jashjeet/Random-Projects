@@ -1,4 +1,10 @@
 
+# -*- coding: utf-8 -*-
+"""
+Created on Thu May 14 03:02:17 2020
+
+@author: jashj
+"""
 
 import requests, re
 from bs4 import BeautifulSoup
@@ -6,7 +12,8 @@ from googlesearch import search
 import pandas as pd
 from tqdm import tqdm
 
-df=pd.read_excel("FY.xlsx", sheet_name='Desi Companies (Source Sheet)')
+df=pd.read_excel(r"C:\Users\jashj\Desktop\Yash\FY.xlsx", sheet_name='Desi Companies (Source Sheet)')
+df=df[0:10]
 l=[]
 
 for emp in tqdm(df['Desi Companies']): 
@@ -33,7 +40,11 @@ for emp in tqdm(df['Desi Companies']):
                 Citizenship=soup.find_all("td",{"align":"right","valign":"top"},text="Citizenship:")[0].findNextSiblings()
                 
                 Country=Citizenship[0].contents[0]
+                
+                NAICS = soup.find_all("td",{"align":"right","valign":"top"},text="NAICS Industry:")[0].findNextSiblings()
 
+                NAICS_field=NAICS[0].contents[0]
+                
                 x=[(lambda x: x.text)(x) for x in var][:-2]
 
                 length=len(x)
@@ -51,6 +62,7 @@ for emp in tqdm(df['Desi Companies']):
                     dict['Email']=x[i*5 + 4]
                     dict['H1B Dependent']=Yes_No
                     dict['Country']=Country
+                    dict['NAICS']=NAICS_field
 
                     l.append(dict)
 
@@ -64,6 +76,8 @@ for emp in tqdm(df['Desi Companies']):
                 dict['Email']='-'
                 dict['H1B Dependent']='-'
                 dict['Country']='-'
+                dict['NAICS']='-'
+                
 
                 l.append(dict)
             
@@ -77,6 +91,7 @@ for emp in tqdm(df['Desi Companies']):
             dict['Email']='-'
             dict['H1B Dependent']='-'
             dict['Country']='-'
+            dict['NAICS']='-'
 
             l.append(dict)
         
@@ -84,4 +99,3 @@ for emp in tqdm(df['Desi Companies']):
 
 df1=pd.DataFrame(l)
 df1.to_csv('final.csv',index=None)
-
